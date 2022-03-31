@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  max-height: 200px;
+  overflow: scroll;
 }
 
 .App-logo {
