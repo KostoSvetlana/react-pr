@@ -1,68 +1,51 @@
 import "./App.css";
-import React, { useEffect, useState, useRef } from "react";
-import { Message } from "./components/Message/Message";
-import { Form } from "./components/Form/Form";
-import { author } from "./utils/const";
-import { MessageList } from "./components/MessageList/MessageList";
+import React from "react";
 import {ChatList} from './components/ChatList/ChatList'
+import {BrowserRouter, NavLink, Route, Routes} from 'react-router-dom' 
+import { Chat } from './screens/Chat/Chat';
 
 
-function App() {
-  const [messages, setMessages] = useState([]);
+const Home = () => <h4>Home page</h4>;
+const Profile =() => <h4>Profile page</h4>
 
-  const [chatList] = useState([
-    { id: "1", name: 'chat1' },
-    { id: "2", name: 'chat2' },
-    { id: "3", name: 'chat3' },
-    { id: "4", name: 'chat4' },
-    { id: "5", name: 'chat5' },
-  ]);
-
-
-
-  const timeout = useRef();
-  const wrapperRef = useRef();
-  
-  const addMessage = (newMsg) => {
-    setMessages([...messages, newMsg]);
-  };
-
-  const sendMessage = (text) => {
-    addMessage({
-      author: author.me,
-      text,
-      id: `msg-${Date.now()}`,
-    });
-  };
-
-  useEffect(() => {
-
-    if (messages[messages.length - 1]?.author === author.me) {
-      timeout.current = setTimeout ( () => {
-        addMessage({
-          author: author.bot,
-          text: "Hi friend",
-          id: `msg-${Date.now()}`,
-        });
-     
-      },1000);
-        
-    }
-    return () => clearTimeout(timeout.current);
-  }, [messages]);
-
-  
-  const handleScroll = () => {
-    wrapperRef.current?.scrollTo({ x: 0, y: 0 });
-  };
-  return (
-    <div className="App" ref={wrapperRef}>
-      <ChatList chatList={chatList} />
-      <MessageList messages={messages} />
-      <Form onSubmit={sendMessage} />
-      <button onClick={handleScroll}>scroll</button>
-    </div>
-  );
+function App(){
+  return(
+    <BrowserRouter>
+    <ul>
+      <li> 
+        <NavLink
+            to="/"
+            style={({ isActive }) => ({ color: isActive ? "green" : "blue" })}
+        > Home
+        </NavLink>
+      </li>
+      <li> <NavLink
+            style={({ isActive }) => ({ color: isActive ? "green" : "blue" })}
+            to="/chat"
+          >
+            Chat
+          </NavLink>
+        </li>
+        <li> <NavLink
+            style={({ isActive }) => ({ color: isActive ? "green" : "blue" })}
+            to="/profile"
+          >
+            Profile
+          </NavLink>
+        </li>
+    </ul>
+    <Routes>
+      <Route path='/' element={<Home/>}></Route>
+      <Route path='/profile' element={<Profile/>}></Route>
+      <Route path="/chat" element={<ChatList/>}>
+      <Route path=":id" element={<Chat/>}></Route>
+      </Route>
+      <Route path='*' element={<h4>404</h4>}></Route>
+    </Routes>
+    </BrowserRouter>
+  )
 }
+
+
 
 export default App;

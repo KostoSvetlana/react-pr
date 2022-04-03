@@ -1,13 +1,22 @@
-import { List, ListItem } from "@mui/material";
-import ListItemText from '@mui/material/ListItemText';
+import { Link, Outlet } from 'react-router-dom';
+import "./ChatList.css";
 
+const chatList = ([
+  { id: "chat1", name: 'Chat1' },
+  { id: "chat2", name: 'Chat2' },
+  { id: "chat3", name: 'Chat3' },
+  { id: "chat4", name: 'Chat4' },
+]);
 
-export function ChatList({  chatList }) {
-  return (
-    <List sx={{ width: '100%', maxWidth: 100, position: "fixed", top:150, left: 10, m: 1 }}>
-      {chatList.map(({ name, id }) => (
-        <ListItem key={id} button> <ListItemText primary={name} /> </ListItem>
+export const ChatList = () => (
+  <>
+    <div className="chat-list">
+      {chatList.map((chat) => (
+        <Link to={`/chat/${chat.id}`} key={chat.id}>
+          {chat.name}
+        </Link>
       ))}
-    </List>
-  );
-}
+    </div>
+    <Outlet />
+  </>
+);

@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import "./Form.css";
-import { TextField } from "@mui/material";
-import Button from "@mui/material/Button";
+import { TextField, Button } from "@mui/material";
 export const Form = ({ onSubmit }) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState();
 
   const inputRef = useRef();
   const handleSubmit = (e) => {
@@ -17,14 +16,10 @@ export const Form = ({ onSubmit }) => {
     setValue(e.target.value);
   };
 
-  useEffect(() => {
-    console.log("did mount", inputRef);
-    inputRef.current?.focus();
-
-    return () => {
-      console.log("will unmount");
-    };
-  }, []);
+ 
+  useEffect(()=>{
+    inputRef.current?.focus()
+})
 
   return (
     <form className="btn" onSubmit={handleSubmit}>
