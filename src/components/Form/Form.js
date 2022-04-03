@@ -1,8 +1,10 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Form.css";
+import { TextField, Button } from "@mui/material";
 export const Form = ({ onSubmit }) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState();
 
+  const inputRef = useRef();
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -14,20 +16,17 @@ export const Form = ({ onSubmit }) => {
     setValue(e.target.value);
   };
 
-  useEffect(() => {
-    console.log("did mount");
-   
-
-    return () => {
-      console.log("will unmount");
-    };
-  }, []);
+ 
+  useEffect(()=>{
+    inputRef.current?.focus()
+})
 
   return (
     <form className="btn" onSubmit={handleSubmit}>
-       <input value={value} onChange={handleChange} type="text"  /> 
-       <input type="submit" /> 
-     
+      <TextField value={value} onChange={handleChange} inputRef={inputRef} />
+       <Button className="mybtn" type="submit" variant="contained">
+        Submit
+      </Button>
     </form>
   );
 };

@@ -1,51 +1,51 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
-import { Message } from "./components/Message/Message";
-import { Form } from "./components/Form/Form";
-import { author } from "./utils/const";
-import { MessageList } from "./components/MessageList/MessageList";
-
-function App() {
-  const [messages, setMessages] = useState([]);
+import React from "react";
+import {ChatList} from './components/ChatList/ChatList'
+import {BrowserRouter, NavLink, Route, Routes} from 'react-router-dom' 
+import { Chat } from './screens/Chat/Chat';
 
 
-  const addMessage = (newMsg) => {
-    setMessages([...messages, newMsg]);
-  };
+const Home = () => <h4>Home page</h4>;
+const Profile =() => <h4>Profile page</h4>
 
-  const sendMessage = (text) => {
-    addMessage({
-      author: author.me,
-      text,
-      id: `msg-${Date.now()}`,
-    });
-  };
-
-  useEffect(() => {
-    let timeout;
-    if (messages[messages.length - 1]?.author === author.me) {
-      timeout = setTimeout ( () => {
-        addMessage({
-          author: author.bot,
-          text: "Hi friend",
-          id: `msg-${Date.now()}`,
-        });
-     
-      },1000);
-        
-    }
-    return () => clearTimeout(timeout);
-  }, [messages]);
-
-  
-
-  return (
-    <div className="App">
-      <MessageList messages={messages} />
-      <Form onSubmit={sendMessage} />
-     
-    </div>
-  );
+function App(){
+  return(
+    <BrowserRouter>
+    <ul>
+      <li> 
+        <NavLink
+            to="/"
+            style={({ isActive }) => ({ color: isActive ? "green" : "blue" })}
+        > Home
+        </NavLink>
+      </li>
+      <li> <NavLink
+            style={({ isActive }) => ({ color: isActive ? "green" : "blue" })}
+            to="/chat"
+          >
+            Chat
+          </NavLink>
+        </li>
+        <li> <NavLink
+            style={({ isActive }) => ({ color: isActive ? "green" : "blue" })}
+            to="/profile"
+          >
+            Profile
+          </NavLink>
+        </li>
+    </ul>
+    <Routes>
+      <Route path='/' element={<Home/>}></Route>
+      <Route path='/profile' element={<Profile/>}></Route>
+      <Route path="/chat" element={<ChatList/>}>
+      <Route path=":id" element={<Chat/>}></Route>
+      </Route>
+      <Route path='*' element={<h4>404</h4>}></Route>
+    </Routes>
+    </BrowserRouter>
+  )
 }
+
+
 
 export default App;
