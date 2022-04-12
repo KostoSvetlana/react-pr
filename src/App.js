@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import {Provider} from "react-redux"; 
-import {BrowserRouter, NavLink, Route, Routes} from 'react-router-dom'
+import { BrowserRouter, Route, Routes, NavLink } from "react-router-dom";
 
 import "./App.css";
-import {ChatList} from './components/ChatList/ChatList'
-import { Chat } from './screens/Chat/Chat';
-import { Profile } from "./screens/Profile/Profile";
+import { ChatList } from "./components/ChatList/ChatList";
+import { Chat } from "./screens/Chat/Chat";
 import { ThemeContext } from "./utils/ThemeContext";
-import { store } from "./store";
+import { Profile } from "./screens/Profile/Profile";
 
-const Home = () => <h4>Home page</h4>;
+import { Home } from "./screens/Home/Home";
+
 
 
 function App(){
@@ -18,8 +17,11 @@ function App(){
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
   };
+
+  
+
   return(
-    <Provider store={store}>
+  
       <ThemeContext.Provider value={{ theme, changeTheme: toggleTheme }}>
     <BrowserRouter>
     <ul>
@@ -48,17 +50,15 @@ function App(){
     <Routes>
       <Route path='/' element={<Home/>}></Route>
       <Route path='/profile' element={<Profile/>}></Route>
-      <Route path="/chat" element={<ChatList/>}>
-      <Route path=":id" element={<Chat/>}></Route>
+      <Route path="/chat" element={<ChatList />}>
+      <Route path=":id" element={<Chat />} 
+      /> 
       </Route>
-      <Route path='*' element={<h4>404</h4>}></Route>
+      <Route path='*' element={<h4>404</h4>} />
     </Routes>
     </BrowserRouter>
     </ThemeContext.Provider>
-    </Provider>
 
-    
-    
   );
 }
 
