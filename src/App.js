@@ -6,7 +6,7 @@ import { ChatList } from "./components/ChatList/ChatList";
 import { Chat } from "./screens/Chat/Chat";
 import { ThemeContext } from "./utils/ThemeContext";
 import { Profile } from "./screens/Profile/Profile";
-
+import { Articles } from "./screens/Articles/Articles";
 import { Home } from "./screens/Home/Home";
 
 
@@ -48,10 +48,18 @@ function App(){
             Profile
           </NavLink>
         </li>
+        <li><NavLink
+              style={({ isActive }) => ({ color: isActive ? "green" : "blue", })}
+              to="/articles"
+            >
+              Articles
+            </NavLink>
+          </li>
     </ul>
     <Routes>
       <Route path='/' element={<Home/>}></Route>
       <Route path='/profile' element={<Profile/>}></Route>
+      <Route path="/articles" element={<Articles />} />
       <Route path="/chat" element={<ChatList />}>
       <Route path=":id" element={<Chat />} 
       /> 
