@@ -1,66 +1,73 @@
-import { useEffect, useRef} from "react";
+import { onChildAdded, onValue, push } from "@firebase/database";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useParams } from "react-router";
 
-
 import { Form } from "../../components/Form/Form";
 import { MessageList } from "../../components/MessageList/MessageList";
-import { author } from "../../utils/const";
-import { selectMessages } from "../../store/messages/selector";
-import { addMessage } from "../../store/messages/actions";
+import {
+  auth,
+  getMsgsListRefById,
+  getMsgsRefById,
+} from "../../services/firebase";
+import { addMessage, addMessageWithReply } from "../../store/messages/actions";
+import {
+  selectMessages,
+  selectMessagesByChatId,
+} from "../../store/messages/selectors";
+//import { author } from "../../utils/const";
 
 export function Chat() {
   const { id } = useParams();
-const messages = useSelector(selectMessages);
-const dispatch = useDispatch();
-  const timeout = useRef();
-  const wrapperRef = useRef()
+
+  const [messages, setMessages] = useState([]);
+
+  const getMessages = useMemo(() => selectMessagesByChatId(id), [id]);
+  // const messages = useSelector(getMessages);
+  const dispatch = useDispatch();
 
   const sendMessage = (text) => {
-    dispatch(
-    addMessage(
-    {
-      author: author.me,
+    push(getMsgsListRefById(id), {
+      author: auth.currentUser.email,
       text,
       id: `msg-${Date.now()}`,
-    },
-    id
-    )
-    );
+    });
+    // dispatch(
+    //   addMessageWithReply(
+    //     {
+    //       author: author.me,
+    //       text,
+    //       id: `msg-${Date.now()}`,
+    //     },
+    //     id
+    //   )
+    // );
   };
 
   useEffect(() => {
-    const lastMessage = messages[id]?.[messages[id]?.length - 1] 
-    if (lastMessage?.author === author.me) {
-      timeout.current = setTimeout(() => {
-        dispatch(
-        addMessage({
-          author: author.bot,
-          text: "This is a message from a robot",
-          id: `msg-${Date.now()}`,
-        },
-        id
-        )
-        );
-      }, 1000);
-    };
+    const unsubscribe = onValue(getMsgsRefById(id), (snapshot) => {
+      const val = snapshot.val();
+      if (!snapshot.val()?.exists) {
+        setMessages(null);
+      } else {
+        console.log(val.messageList);
+        setMessages(Object.values(val.messageList || {}));
+      }
+    });
 
+    return unsubscribe;
+  }, [id]);
 
-    return () => {
-      clearTimeout(timeout.current);
-    };
-  }, [messages]);
-
-    if (!messages[id]) {
-    return <Navigate to="/chat" replace />
-    };
-
-    return (
-      <div className="App" ref={wrapperRef}>
-        <div>
-          <MessageList messages={messages[id]} />
-          <Form onSubmit={sendMessage} />
-        </div>
-      </div>
-    );
+  if (!messages) {
+    return <Navigate to="/chat" replace />;
   }
+
+  return (
+    <div className="App">
+      <div>
+        <MessageList messages={messages} />
+        <Form onSubmit={sendMessage} />
+      </div>
+    </div>
+  );
+}
