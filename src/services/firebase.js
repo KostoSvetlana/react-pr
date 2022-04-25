@@ -8,14 +8,14 @@ import {
 import { getDatabase, ref } from "firebase/database";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyA_Guscq491NPyo-vMCtGIztuDFVxGSuJY",
-    authDomain: "react--pr.firebaseapp.com",
-    databaseURL: "https://react--pr-default-rtdb.firebaseio.com",
-    projectId: "react--pr",
-    storageBucket: "react--pr.appspot.com",
-    messagingSenderId: "1024494320339",
-    appId: "1:1024494320339:web:10dc7b7b3d51713294b226"
-  };
+  apiKey: "AIzaSyALj0Ll1fIW3E5lqo8VzPNaJsZh1_P7gbQ",
+  authDomain: "gb1402-5cc0b.firebaseapp.com",
+  databaseURL: "https://gb1402-5cc0b-default-rtdb.firebaseio.com",
+  projectId: "gb1402-5cc0b",
+  storageBucket: "gb1402-5cc0b.appspot.com",
+  messagingSenderId: "863386602685",
+  appId: "1:863386602685:web:224e27c3761995ee5dfbd4",
+};
 
 const app = initializeApp(firebaseConfig);
 
